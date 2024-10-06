@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="ja"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head>
+    <title>Index</title>
+</head>
+<body>
+<div>
+    <main layout:fragment="content">
+        <div class="box" data-target="ancestor">
+            <p>
+                <code>data-target="ancestor"</code>属性をつけた要素
+            </p>
+
+            <div class="box" data-target="brothers">
+                <code>data-target="brothers"</code>属性をつけた要素
+            </div>
+
+            <div class="grid">
+                <button th:hx-get="@{/ajax/target/none}"
+                        class="button is-info cell">
+                    <code>hx-target</code>を指定しない
+                </button>
+
+                <button th:hx-get="@{/ajax/target/this}"
+                        hx-target="this"
+                        class="button is-info cell">
+                    <code>hx-target="this"</code>
+                </button>
+
+                <button th:hx-get="@{/ajax/target/plain}"
+                        hx-target="[data-target=brothers]"
+                        class="button is-info cell">
+                    <code>hx-target="[data-target=brothers]"</code>
+                </button>
+
+                <button th:hx-get="@{/ajax/target/closest}"
+                        hx-target="closest [data-target=ancestor]"
+                        class="button is-info cell">
+                    <code>hx-target="closest [data-target=ancestor]"</code>
+                </button>
+
+                <button th:hx-get="@{/ajax/target/next}"
+                        hx-target="next [data-target=brothers]"
+                        class="button is-info cell">
+                    <code>hx-target="next [data-target=brothers]"</code>
+                </button>
+
+                <button th:hx-get="@{/ajax/target/previous}"
+                        hx-target="previous [data-target=brothers]"
+                        class="button is-info cell">
+                    <code>hx-target="previous [data-target=brothers]"</code>
+                </button>
+
+                <button th:hx-get="@{/ajax/target/find}"
+                        hx-target="find [data-target=descendants]"
+                        class="button is-info cell grid">
+                    <code>hx-target="find [data-target=descendants]"</code>
+                    <span data-target="descendants" class="box cell">
+                        <code>data-target="descendants"</code>属性をつけた要素
+                    </span>
+                </button>
+            </div>
+
+            <div class="box" data-target="brothers">
+                <code>data-target="brothers"</code>属性をつけた要素
+            </div>
+        </div>
+    </main>
+
+    <th:block th:fragment="none">
+        <code>hx-target</code>を指定しないと、自分自身がターゲットになる。
+    </th:block>
+
+    <th:block th:fragment="this">
+        <code>hx-target="this"</code>を指定すると、自分自身がターゲットになる。
+    </th:block>
+
+    <th:block th:fragment="plain">
+        <code>hx-target="&lt;selector&gt;"</code>を指定すると、&lt;selector&gt;にマッチする要素がターゲットになる。
+    </th:block>
+
+    <th:block th:fragment="closest">
+        <p class="section">
+            <code>hx-target="closest &lt;selector&gt;"</code>を指定すると、自分の祖先の要素のうち最も近いものから順にマッチする要素を探す。
+        </p>
+        <p class="section">
+            <a th:href="@{/ajax/target}" class="button is-info">
+                戻に戻る
+            </a>
+        </p>
+    </th:block>
+
+    <th:block th:fragment="next">
+        <code>hx-target="next &lt;selector&gt;"</code>を指定すると、自分よりも後のDOMからマッチする要素を探す。
+    </th:block>
+
+    <th:block th:fragment="previous">
+        <code>hx-target="previous &lt;selector&gt;"</code>を指定すると、自分よりも前のDOMからマッチする要素を探す。
+    </th:block>
+
+    <th:block th:fragment="find">
+        <code>hx-target="find &lt;selector&gt;"</code>を指定すると、自分の子孫からマッチする要素を探す。
+    </th:block>
+</div>
+</body>
+</html>

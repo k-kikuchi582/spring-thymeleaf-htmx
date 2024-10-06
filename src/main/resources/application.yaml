@@ -1,0 +1,4 @@
+spring.application.name: spring-thymeleaf-htmx
+spring:
+  thymeleaf:
+    cache: false

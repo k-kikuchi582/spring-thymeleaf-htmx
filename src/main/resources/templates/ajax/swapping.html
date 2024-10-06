@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="ja"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head>
+    <title>Index</title>
+</head>
+<body>
+<div>
+    <main layout:fragment="content">
+        <div class="box fixed-grid has-2-cols">
+            <div class="grid">
+                <button th:hx-get="@{/ajax/swapping/innerHTML}"
+                        hx-swap="innerHTML"
+                        hx-target="#target"
+                        class="button is-info cell is-flex is-flex-direction-column is-gap-1">
+                    <code>hx-swap="innerHTML"</code>
+                    <span>デフォルトの動作。ターゲット要素の中に置かれる。</span>
+                </button>
+
+                <button th:hx-get="@{/ajax/swapping/outerHTML}"
+                        hx-swap="outerHTML"
+                        hx-target="#target"
+                        class="button is-info cell is-flex is-flex-direction-column is-gap-1">
+                    <code>hx-swap="outerHTML"</code>
+                    <span>ターゲット要素自身を入れ替える</span>
+                </button>
+
+                <button th:hx-get="@{/ajax/swapping/beforebegin}"
+                        hx-swap="beforebegin"
+                        hx-target="#target"
+                        class="button is-info cell is-flex is-flex-direction-column is-gap-1">
+                    <code>hx-swap="beforebegin"</code>
+                    <span>ターゲット要素の直前に挿入する</span>
+                </button>
+
+                <button th:hx-get="@{/ajax/swapping/afterbegin}"
+                        hx-swap="afterbegin"
+                        hx-target="#target"
+                        class="button is-info cell is-flex is-flex-direction-column is-gap-1">
+                    <code>hx-swap="afterbegin"</code>
+                    <span>ターゲット要素の子要素の一番最初に挿入する</span>
+                </button>
+
+                <button th:hx-get="@{/ajax/swapping/beforeend}"
+                        hx-swap="beforeend"
+                        hx-target="#target"
+                        class="button is-info cell is-flex is-flex-direction-column is-gap-1">
+                    <code>hx-swap="beforeend"</code>
+                    <span>ターゲット要素の子要素の一番最後に挿入する</span>
+                </button>
+
+                <button th:hx-get="@{/ajax/swapping/afterend}"
+                        hx-swap="afterend"
+                        hx-target="#target"
+                        class="button is-info cell is-flex is-flex-direction-column is-gap-1">
+                    <code>hx-swap="afterend"</code>
+                    <p>ターゲット要素の直後に挿入する</p>
+                </button>
+
+                <button th:hx-get="@{/ajax/swapping/delete}"
+                        hx-swap="delete"
+                        hx-target="#target"
+                        class="button is-info cell is-flex is-flex-direction-column is-gap-1">
+                    <code>hx-swap="delete"</code>
+                    <span>レスポンスに関わらずターゲット要素を削除する</span>
+                </button>
+
+                <button th:hx-get="@{/ajax/swapping/none}"
+                        hx-swap="none"
+                        hx-target="#target"
+                        class="button is-info cell is-flex is-flex-direction-column is-gap-1">
+                    <code>hx-swap="none"</code>
+                    <span>レスポンスによるコンテンツの挿入を行わない</span>
+                </button>
+            </div>
+        </div>
+
+        <civ class="box">
+            <div class="grid is-gap-3">
+                <div class="cell box">
+                    ターゲットの直前の要素
+                </div>
+
+                <div id="target" class="cell grid box">
+                    <div class="cell box">
+                        ターゲット
+                    </div>
+                </div>
+
+                <div class="cell box">
+                    ターゲットの直前の要素
+                </div>
+            </div>
+        </civ>
+    </main>
+
+    <div th:fragment="outerHTML" id="target" class="cell grid box has-background-warning">
+        <div class="cell">
+            ターゲット。<code>outerHTML</code>による入れ替わりが発生しました。
+        </div>
+    </div>
+
+    <div th:fragment="innerHTML" class="cell box has-background-success">
+        ターゲット。<code>innerHTMLによる入れ替わりが発生しました。</code>
+    </div>
+
+    <div th:fragment="beforebegin" class="cell box has-background-link">
+        <code>beforebegin</code>による挿入が行われました。
+    </div>
+
+    <div th:fragment="afterend" class="cell box has-background-link">
+        <code>afterend</code>による挿入が行われました。
+    </div>
+
+    <divk th:fragment="afterbegin" class="cell box has-background-danger">
+        <code>afterbegin</code>による挿入が行われました。
+    </divk>
+
+    <div th:fragment="beforeend" class="cell box has-background-danger">
+        <code>beforeend</code>による挿入が行われました。
+    </div>
+</div>
+</body>
+</html>

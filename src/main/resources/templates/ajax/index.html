@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="ja"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head>
+    <title>Index</title>
+</head>
+<body>
+<div>
+    <main layout:fragment="content">
+        <div class="block">
+            <button th:hx-get="@{/ajax/ajax}" hx-trigger="click" hx-target="#target" class="button is-info">GET</button>
+            <button th:hx-post="@{/ajax/ajax}" hx-trigger="click" hx-target="#target" class="button is-success">POST</button>
+            <button th:hx-put="@{/ajax/ajax}" hx-trigger="click" hx-target="#target" class="button is-warning">PUT</button>
+            <button th:hx-delete="@{/ajax/ajax}" hx-trigger="click" hx-target="#target" class="button is-danger">DELETE</button>
+        </div>
+        <div id="target" class="box">
+            <p class="notification is-info">
+                上のボタンを押してください。
+            </p>
+        </div>
+    </main>
+
+    <div th:fragment="ajax">
+        <table class="table">
+            <tbody>
+            <tr>
+                <th>Method</th>
+                <td th:text="${method}"></td>
+            </tr>
+            <tr>
+                <th>Host</th>
+                <td th:text="${host} ?: 'Unknown'"></td>
+            </tr>
+            <tr>
+                <th>User Agent</th>
+                <td th:text="${useragent} ?: 'Unknown'"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+</body>
+</html>

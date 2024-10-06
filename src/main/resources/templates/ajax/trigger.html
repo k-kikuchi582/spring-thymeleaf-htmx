@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="ja"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head>
+    <title>Index</title>
+</head>
+<body>
+<div>
+    <main layout:fragment="content">
+        <section class="container content">
+            <h2>トリガーの種類</h2>
+            <p>
+                <code>hx-trigger</code>属性に通常のDOMイベントを書くことで、そのイベントでリクエストが発行されるようになる。
+                例えば、<code>click</code>イベント、
+                <code>input</code>要素などの<code>change</code>イベント、
+                <code>form</code>要素の<code>submit</code>イベント、など。
+            </p>
+
+            <p>
+                <button class="button is-info"
+                        th:hx-get="@{/ajax/trigger/trigger-click}"
+                        hx-trigger="click" hx-target="find span" hx-swap="outerHTML">
+                    <code class="mr-2">trigger="click"</code>
+                    <span>クリックしてください。</span>
+                </button>
+            </p>
+
+            <p>
+                <label for="trigger-change"><code>trigger="change"</code></label>
+                <select id="trigger-change" name="trigger-change" class="select"
+                        th:hx-get="@{/ajax/trigger/trigger-change}"
+                        hx-trigger="change" hx-target="#trigger-change-target">
+                    <option value="apple">リンゴ</option>
+                    <option value="orange">オレンジ</option>
+                    <option value="grape">ブドウ</option>
+                    <option value="banana">バナナ</option>
+                </select>
+            </p>
+
+            <p id="trigger-change-target">
+                <span th:fragment="trigger-change(fruit)"
+                      th:text="${fruit} ? |${fruit}が選択されました。| : '選択してください。'"></span>
+            </p>
+        </section>
+        <section class="container content">
+            <h2>Trigger Modifiers</h2>
+            <p>
+                トリガーにModifierをつけることで動作を変更することができる。Modifierは複数つけることが可能。
+            </p>
+
+            <h3>once</h3>
+            <p>一度だけリクエストを行う</p>
+
+            <p>
+                <label for="trigger-change-once"><code>trigger="change once"</code></label>
+                <select id="trigger-change-once" name="trigger-change" class="select"
+                        th:hx-get="@{/ajax/trigger/trigger-change}"
+                        hx-trigger="change once" hx-target="#trigger-change-once-target">
+                    <option value="apple">リンゴ</option>
+                    <option value="orange">オレンジ</option>
+                    <option value="grape">ブドウ</option>
+                    <option value="banana">バナナ</option>
+                </select>
+            </p>
+
+            <p id="trigger-change-once-target">
+                <span th:replace="~{::trigger-change(null)}"></span>
+            </p>
+
+            <h3>changed</h3>
+            <p>要素の値が変更されたときのみリクエストを行う</p>
+
+            <label for="modifier-changed"><code>keyup changed delay:500ms</code></label>
+            <input name="modifier-changed" class="input" id="modifier-changed"
+                   th:hx-get="@{/ajax/trigger/modifier-changed}"
+                   hx-trigger="keyup changed delay:500ms"
+                   hx-target="#modifier-changed-target">
+
+            <p id="modifier-changed-target">
+                <span th:fragment="modifier-changed(value)"
+                      th:text="${value} ? |「${value}」が入力されました。| : '何か入力してください。'"></span>
+            </p>
+
+            <h3>delay:&lt;time interval&gt;</h3>
+            <p>リクエストを実行する前に設定された時間だけ待つ（例：<code>1s</code>）。待機中に新しいイベントが発生するとカウントダウンはリセットされる。</p>
+
+            <button class="button is-info"
+                    th:hx-get="@{/ajax/trigger/trigger-click}"
+                    hx-trigger="click delay:2s" hx-target="find span" hx-swap="outerHTML">
+                <code class="mr-2">trigger="click delay:2s"</code>
+                <span>クリックしてください。</span>
+            </button>
+
+            <h3>throttle:&lt;time interval&gt;</h3>
+            <p>リクエストを実行する前に設定された時間だけ待つ。
+                <code>delay</code>とは異なり、待機中に新しいイベントが発生した場合、新しいイベントは無視される。</p>
+
+            <button class="button is-info"
+                    th:hx-get="@{/ajax/trigger/trigger-click}"
+                    hx-trigger="click throttle:2s" hx-target="find span" hx-swap="outerHTML">
+                <code class="mr-2">trigger="click throttle:2s"</code>
+                <span>クリックしてください。</span>
+            </button>
+
+            <h3><code>from:&lt;CSS Selector&gt;</code></h3>
+            <p>別の要素のイベントでトリガーされる。</p>
+
+            <button id="modifier-from-target" class="button is-info">
+                <code>id="modifier-from-target"</code>
+            </button>
+
+            <p th:hx-get="@{/ajax/trigger/trigger-click}"
+               hx-trigger="click from:#modifier-from-target" hx-target="find span" hx-swap="outerHTML">
+                <code>hx-trigger="click from:#modifier-from-target"</code>
+                <span>クリックしてください。</span>
+            </p>
+        </section>
+        <section class="container content">
+            <h2>Special Events</h2>
+            <p><code>hx-trigger</code>用の特別なイベントがいくつか用意されている。</p>
+
+            <h3>load</h3>
+            <p>要素が最初にロードされたときに一度だけ実行される。</p>
+
+            <p th:hx-get="@{/ajax/trigger/special-event-load}"
+               hx-trigger="load delay:3s" hx-target="find span" hx-swap="outerHTML">
+                <code>hx-trigger="load delay:3s"</code>
+                <span><progress class="progress is-medium is-primary" max="100">45%</progress></span>
+            </p>
+
+            <h3>revealed</h3>
+            <p>要素が最初にビューポートにスクロールされたときに一度だけ実行される。</p>
+
+            <p th:hx-get="@{/ajax/trigger/special-event-load}"
+               hx-trigger="revealed delay:1s" hx-target="find span" hx-swap="outerHTML">
+                <code>hx-trigger="revealed delay:1s"</code>
+                <span><progress class="progress is-medium is-info" max="100">45%</progress></span>
+            </p>
+
+            <h3>intersect</h3>
+            <p>要素が最初にビューポートに交差したときに一度だけ実行される。</p>
+
+            <p th:hx-get="@{/ajax/trigger/special-event-load}"
+               hx-trigger="intersect delay:1s" hx-target="find span" hx-swap="outerHTML">
+                <code>hx-trigger="intersect delay:1s"</code>
+                <span><progress class="progress is-medium is-warning" max="100">45%</progress></span>
+            </p>
+
+            <p><code>intersect</code>は二つの追加オプションを持つ</p>
+            <dl>
+                <dt><code>root:&lt;CSS Selector&gt;</code></dt>
+                <dd>交差判定を行う要素のCSSセレクタを指定する。</dd>
+
+                <dt><code>threshold:&lt;float&gt;</code></dt>
+                <dd>0.0~1.0の小数。要素にどの程度交差したらロードが行われるかを指定する。</dd>
+            </dl>
+        </section>
+
+        <section class="container content">
+            <h2>Polling</h2>
+            <p><code>every &lt;interval&gt;</code>を使うことで、定期的にリクエストを繰り返すことができる。</p>
+
+            <p th:hx-get="@{/ajax/trigger/polling}" hx-trigger="every 1s" hx-target="find span" hx-swap="outerHTML">
+                <code>hx-trigger="every 1s"</code>
+                <span th:fragment="polling(datetime)"
+                      th:text="|現在時刻は${datetime != null ? #dates.format(datetime, 'HH時mm分ss秒') : '...'}です。|" ></span>
+            </p>
+        </section>
+
+        <section class="container content">
+            <h2>Load Polling</h2>
+            <p>
+                下記のように、<code>load</code>イベントと遅延を組み合わせ、
+                自分自身と同じHTMLを返し続けることでもポーリングを実現することができる。
+                このやり方では、レスポンスのHTMLを変えることでポーリングを終了することができるため、
+                例えば、処理が終わったら止まるプログレスバーを実装するような場合に使うことができる。
+            </p>
+            <pre><code>
+                &lt;div th:hx-get="@{/ajax/trigger/load-polling}"
+                    hx-trigger="load delay:1s"
+                    hx-swap="outerHTML"
+                &gt;
+                    &lt;progress class="progress is-medium is-danger" max="100"&gt;&lt;/progress&gt;
+                &lt;/div&gt;
+            </code></pre>
+
+            <div th:fragment="load-polling(value)"
+                 th:hx-get="@{/ajax/trigger/load-polling}"
+                 hx-trigger="load delay:1s"
+                 hx-swap="outerHTML"
+            >
+                <progress class="progress is-medium is-danger" max="100" th:value="${value} ?: 0">45%</progress>
+            </div>
+        </section>
+    </main>
+
+    <span th:fragment="trigger-click">
+       クリックされました。
+    </span>
+
+    <span th:fragment="special-event-load">
+       ロードされました。
+    </span>
+
+    <p th:fragment="load-polling-completed">
+        ポーリングが終わりました。
+    </p>
+</div>
+</body>
+</html>

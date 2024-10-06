@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="ja"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title layout:title-pattern="$LAYOUT_TITLE | $CONTENT_TITLE">Spring/Thymeleaf/htmx</title>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.0/css/bulma.min.css">
+    <link rel="stylesheet" href="../static/css/style.css" th:href="@{/css/style.css}">
+
+    <script src="https://unpkg.com/htmx.org@1.9.12"></script>
+</head>
+<body class="fixed-grid has-1-cols">
+<div class="grid ">
+    <header class="header">
+        <h1>
+            へっだ
+        </h1>
+    </header>
+    <main class="section">
+        <div class="container" layout:fragment="content"></div>
+    </main>
+    <footer class="footer">
+        ふった
+    </footer>
+</div>
+</body>
+</html>

@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="ja"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head>
+    <title>Index</title>
+</head>
+<body>
+<div>
+    <main layout:fragment="content">
+        <section class="container content">
+            <h1>パラメータ</h1>
+            <h2><code>value</code>属性を持つ要素のパラメータ</h2>
+            <p>デフォルトでは、リクエストを発生させる要素に値がある場合、その値が含まれる</p>
+
+            <input name="element-has-value" class="input" id="element-has-value"
+                   th:hx-get="@{/ajax/parameters/element-has-value}"
+                   hx-trigger="keyup changed delay:500ms"
+                   hx-target="#element-has-value-target">
+
+            <p id="element-has-value-target">
+                <span th:fragment="element-has-value(value)"
+                      th:text="${value} ? |「${value}」が入力されました。| : '何か入力してください。'"></span>
+            </p>
+        </section>
+        <section class="container content">
+            <h2><code>form</code>要素のパラメータ</h2>
+            <p>
+                デフォルトでは、<code>form</code>要素内で発火したリクエストには、<code>form</code>要素のすべての値が含まれる
+            </p>
+
+            <form>
+                <div class="field">
+                    <label for="your-name" class="label">あなたの名前を入力してください。</label>
+                    <input type="text" name="your-name" id="your-name" class="input">
+                </div>
+                <div class="field">
+                    <label for="favorite-fruit" class="label">好きなフルーツを選んでください。</label>
+                    <div class="select is-multiple">
+                        <select id="favorite-fruit" name="fruit" multiple>
+                            <option value="りんご">リンゴ🍎</option>
+                            <option value="みかん">みかん🍊</option>
+                            <option value="ぶどう">ぶどう🍇</option>
+                            <option value="バナナ">バナナ🍌</option>
+                        </select>
+                    </div>
+                </div>
+                <fieldset class="field">
+                    <legend class="label">飼ってみたいペットを選んでください。</legend>
+
+                    <label class="checkbox">
+                        <input type="checkbox" name="pet" value="dog" >
+                        イヌ
+                    </label>
+                    <label class="checkbox">
+                        <input type="checkbox" name="pet" value="cat">
+                        ネコ
+                    </label>
+                    <label class="checkbox">
+                        <input type="checkbox" name="pet" value="pig">
+                        ブタ
+                    </label>
+                </fieldset>
+
+                <div class="field">
+                    <button
+                            class="button is-primary"
+                            th:hx-post="@{/ajax/parameters/form}"
+                            hx-trigger="click"
+                            hx-target="#show-form-data">送信</button>
+                </div>
+            </form>
+
+            <table class="table" id="show-form-data">
+                <tbody th:fragment="show-form-data(yourName, fruits, pets)">
+                <tr>
+                    <th>あなたの名前</th>
+                    <td th:text="${yourName ?: '未入力'}"></td>
+                </tr>
+                <tr>
+                    <th>好きなフルーツ</th>
+                    <td th:text="${fruits ?: '未選択'}"></td>
+                </tr>
+                <tr>
+                    <th>飼ってみたいペット</th>
+                    <td th:text="${pets ?: '未選択'}"></td>
+                </tr>
+                </tbody>
+            </table>
+
+        </section>
+
+        <section class="container content">
+            <h2>送信するパラメータを絞る</h2>
+            <p>
+                <code>hx-params</code>属性にリクエストに含めたいパラメータの名前を設定することで、送信するパラメータを制御することができる。
+            </p>
+
+            <form>
+                <div class="content">
+                    <p><code>hx-params</code>にはいくつかの設定方法がある</p>
+                    <ul>
+                        <li>
+                            <button
+                                    class="button is-primary"
+                                    hx-params="*"
+                                    th:hx-post="@{/ajax/parameters/params}"
+                                    hx-trigger="click"
+                                    hx-target="#show-form-data-params">
+                                <code>hx-params="*"</code> - すべてのパラメータを送信する（デフォルト）
+                            </button>
+                        </li>
+                        <li>
+                            <button
+                                    class="button is-primary"
+                                    hx-params="none"
+                                    th:hx-post="@{/ajax/parameters/params}"
+                                    hx-trigger="click"
+                                    hx-target="#show-form-data-params">
+                                <code>hx-params="none"</code> - 一切のパラメータを送信しない
+                            </button>
+                        </li>
+                        <li>
+                            <button
+                                    class="button is-primary"
+                                    hx-params="not your-name-params,fruit-params"
+                                    th:hx-post="@{/ajax/parameters/params}"
+                                    hx-trigger="click"
+                                    hx-target="#show-form-data-params">
+                                <code>hx-params="not name,fruit"</code> - カンマ区切りで指定したパラメータを送信しない。
+                            </button>
+                        </li>
+                        <li>
+                            <button
+                                    class="button is-primary"
+                                    hx-params="not your-name-params,pet-params"
+                                    th:hx-post="@{/ajax/parameters/params}"
+                                    hx-trigger="click"
+                                    hx-target="#show-form-data-params">
+                                <code>hx-params="name,pet"</code> - カンマ区切りで指定したパラメータのみを送信する
+                            </button>
+                        </li>
+                    </ul>
+                </div>
+                <div class="field">
+                    <label for="your-name-params" class="label">あなたの名前を入力してください。</label>
+                    <input type="text" name="your-name-params" id="your-name-params" class="input">
+                </div>
+                <div class="field">
+                    <label for="favorite-fruit-params" class="label">好きなフルーツを選んでください。</label>
+                    <div class="select is-multiple">
+                        <select id="favorite-fruit-params" name="fruit-params" multiple>
+                            <option value="りんご">リンゴ🍎</option>
+                            <option value="みかん">みかん🍊</option>
+                            <option value="ぶどう">ぶどう🍇</option>
+                            <option value="バナナ">バナナ🍌</option>
+                        </select>
+                    </div>
+                </div>
+                <fieldset class="field">
+                    <legend class="label">飼ってみたいペットを選んでください。</legend>
+
+                    <label class="checkbox">
+                        <input type="checkbox" name="pet-params" value="dog">
+                        イヌ
+                    </label>
+                    <label class="checkbox">
+                        <input type="checkbox" name="pet-params" value="cat">
+                        ネコ
+                    </label>
+                    <label class="checkbox">
+                        <input type="checkbox" name="pet-params" value="pig">
+                        ブタ
+                    </label>
+                </fieldset>
+            </form>
+
+            <table class="table" id="show-form-data-params">
+                <tbody th:fragment="show-form-data-params(yourName, fruits, pets)">
+                <tr>
+                    <th>あなたの名前</th>
+                    <td th:text="${yourName ?: '未入力'}"></td>
+                </tr>
+                <tr>
+                    <th>好きなフルーツ</th>
+                    <td th:text="${fruits ?: '未選択'}"></td>
+                </tr>
+                <tr>
+                    <th>飼ってみたいペット</th>
+                    <td th:text="${pets ?: '未選択'}"></td>
+                </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section class="container content">
+            <h2>自分自身の値や自分が属するformの値以外の値を送信する</h2>
+            <p>
+                <label for="include-input">
+                    <code>hx-include</code>属性に要素を指すセレクタを設定することで、そのセレクタが指す要素の値を送信することができる
+                </label>
+            </p>
+
+            <p>
+                <input name="include" class="input"
+                       id="include-input"
+                       hx-target="#include-target">
+            </p>
+
+            <p>
+                <button type="button"
+                        class="button is-primary"
+                        hx-params="not your-name-params,pet-params"
+                        th:hx-post="@{/ajax/parameters/include}"
+                        hx-trigger="click"
+                        hx-include="#include-input"
+                        hx-target="#include-target">
+                    <code>hx-include="#include-input"</code>
+                </button>
+            </p>
+
+            <p id="include-target">
+                <span th:fragment="include(value)"
+                      th:text="${value} ? |「${value}」が入力されました。| : '何か入力してください。'"></span>
+        </section>
+
+        <section class="container content">
+            <h2>ファイルアップロード</h2>
+
+            <form
+                    hx-encoding="multipart/form-data"
+                    th:hx-post="@{/ajax/parameters/file}"
+                    hx-target="#uploaded-image-viewer">
+                <div class="file has-name">
+                    <label class="file-label">
+                        <input class="file-input" type="file" name="file" accept="image/*"/>
+                        <span class="file-cta">
+                           <span class="file-icon">
+                              <i class="fas fa-upload"></i>
+                           </span>
+                           <span class="file-label"> 画像ファイルを選択してください。 </span>
+                        </span>
+                        <span class="file-name"> ... </span>
+                    </label>
+                </div>
+                <script>
+                    htmx.on('#form', 'htmx:xhr:progress', function(evt) {
+                        htmx.find('#progress').setAttribute('value', evt.detail.loaded/evt.detail.total * 100)
+                    });
+                </script>
+
+                <div class="field">
+                    <button type="submit"
+                            class="button is-primary">
+                        送信
+                    </button>
+                </div>
+
+                <div class="field">
+                    <progress class="progress" id='progress' value='0' max='100'></progress>
+                </div>
+            </form>
+
+            <p id="uploaded-image-viewer">
+                <span th:fragment="uploaded-file-viewer(isUploaded)">
+                    <img th:if="${isUploaded}"
+                         th:src="@{/ajax/parameters/file/uploaded}" alt="アップロードしたファイル">
+                    <span th:unless="${isUploaded}">ファイルをアップロードしてください。</span>
+                </span>
+
+            </p>
+        </section>
+
+        <section class="container content">
+
+        </section>
+    </main>
+</div>
+</body>
+</html>
